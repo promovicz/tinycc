@@ -95,8 +95,8 @@ LIBTCCAPI int tcc_relocate(TCCState *s1);
 LIBTCCAPI void *tcc_get_symbol(TCCState *s, const char *name);
 
 /* list all (global) symbols and their values via 'symbol_cb()' */
-LIBTCCAPI void tcc_list_symbols(TCCState *s, void *ctx,
-    void (*symbol_cb)(void *ctx, const char *name, const void *val));
+typedef void (*TCCSymbolFunc)(void *opaque, const char *name, const void *val);
+LIBTCCAPI void tcc_list_symbols(TCCState *s, void *symbol_ctx, TCCSymbolFunc symbol_cb);
 
 /* experimental/advanced section (see libtcc_test_mt.c for an example) */
 

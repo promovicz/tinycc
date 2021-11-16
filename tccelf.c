@@ -544,8 +544,7 @@ ST_FUNC void list_elf_symbols(TCCState *s, void *ctx,
 }
 
 /* list elf symbol names and values */
-LIBTCCAPI void tcc_list_symbols(TCCState *s, void *ctx,
-    void (*symbol_cb)(void *ctx, const char *name, const void *val))
+LIBTCCAPI void tcc_list_symbols(TCCState *s, void *ctx, TCCSymbolFunc symbol_cb)
 {
     list_elf_symbols(s, ctx, symbol_cb);
 }
