@@ -10,9 +10,13 @@ extern "C" {
 #endif
 
 /*****************************/
-/* set custom allocator for all allocations (optional), NULL for default. */
-typedef void *TCCReallocFunc(void *ptr, unsigned long size);
-LIBTCCAPI void tcc_set_realloc(TCCReallocFunc *my_realloc);
+/* global */
+
+/* set the memory functions used by libtcc */
+typedef void (*TCCFreeFunc)(void *ptr);
+typedef void *(*TCCAllocFunc)(unsigned long size);
+typedef void *(*TCCReallocFunc)(void *ptr, unsigned long size);
+LIBTCCAPI void tcc_set_memory_funcs(TCCAllocFunc alloc_func, TCCReallocFunc realloc_func, TCCFreeFunc free_func);
 
 /*****************************/
 typedef struct TCCState TCCState;
