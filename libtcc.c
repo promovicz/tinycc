@@ -250,17 +250,37 @@ ST_FUNC char *tcc_load_text(int fd)
 #undef malloc
 #undef realloc
 
+static TCCFreeFunc tcc_free_func = free;
+static TCCAllocFunc tcc_alloc_func = malloc;
+static TCCReallocFunc tcc_realloc_func = realloc;
+
+PUB_FUNC void tcc_set_memory_funcs(TCCAllocFunc alloc_func, TCCReallocFunc realloc_func, TCCFreeFunc free_func)
+{
+    if(alloc_func)
+        tcc_alloc_func = alloc_func;
+    else
+        tcc_alloc_func = malloc;
+    if(alloc_func)
+        tcc_realloc_func = realloc_func;
+    else
+        tcc_realloc_func = realloc;
+    if(free_func)
+        tcc_free_func = free_func;
+    else
+        tcc_free_func = free;
+}
+
 #ifndef MEM_DEBUG
 
 PUB_FUNC void tcc_free(void *ptr)
 {
-    free(ptr);
+    tcc_free_func(ptr);
 }
 
 PUB_FUNC void *tcc_malloc(unsigned long size)
 {
     void *ptr;
-    ptr = malloc(size);
+    ptr = tcc_alloc_func(size);
     if (!ptr && size)
         _tcc_error("memory full (malloc)");
     return ptr;
@@ -278,7 +298,7 @@ PUB_FUNC void *tcc_mallocz(unsigned long size)
 PUB_FUNC void *tcc_realloc(void *ptr, unsigned long size)
 {
     void *ptr1;
-    ptr1 = realloc(ptr, size);
+    ptr1 = tcc_realloc_func(ptr, size);
     if (!ptr1 && size)
         _tcc_error("memory full (realloc)");
     return ptr1;

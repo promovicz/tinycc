@@ -19,6 +19,13 @@ typedef void (*TCCErrorFunc)(void *opaque, const char *msg);
 /* type for symbol iteration functions */
 typedef void (*TCCSymbolFunc)(void *opaque, const char *name, const void *val);
 
+/* types for memory management functions */
+typedef void (*TCCFreeFunc)(void *ptr);
+typedef void *(*TCCAllocFunc)(unsigned long size);
+typedef void *(*TCCReallocFunc)(void *ptr, unsigned long size);
+
+/* set the memory functions used by libtcc */
+LIBTCCAPI void tcc_set_memory_funcs(TCCAllocFunc alloc_func, TCCReallocFunc realloc_func, TCCFreeFunc free_func);
 
 /* create a new TCC compilation context */
 LIBTCCAPI TCCState *tcc_new(void);
