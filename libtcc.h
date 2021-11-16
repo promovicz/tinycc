@@ -13,7 +13,12 @@ struct TCCState;
 
 typedef struct TCCState TCCState;
 
+/* type for error callbacks */
 typedef void (*TCCErrorFunc)(void *opaque, const char *msg);
+
+/* type for symbol iteration functions */
+typedef void (*TCCSymbolFunc)(void *opaque, const char *name, const void *val);
+
 
 /* create a new TCC compilation context */
 LIBTCCAPI TCCState *tcc_new(void);
@@ -101,8 +106,7 @@ LIBTCCAPI int tcc_relocate(TCCState *s1, void *ptr);
 LIBTCCAPI void *tcc_get_symbol(TCCState *s, const char *name);
 
 /* return symbol value or NULL if not found */
-LIBTCCAPI void tcc_list_symbols(TCCState *s, void *ctx,
-    void (*symbol_cb)(void *ctx, const char *name, const void *val));
+LIBTCCAPI void tcc_list_symbols(TCCState *s, void *symbol_ctx, TCCSymbolFunc symbol_func);
 
 #ifdef __cplusplus
 }
