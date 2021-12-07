@@ -375,6 +375,7 @@ install-unx:
 	$(call IF,$(TOPSRC)/include/*.h $(TOPSRC)/tcclib.h,"$(tccdir)/include")
 	$(call $(if $(findstring .so,$(LIBTCC)),IBw,IFw),$(LIBTCC),"$(libdir)")
 	$(call IF,$(TOPSRC)/libtcc.h,"$(includedir)")
+	$(call IF,libtcc.pc,"$(libdir)/pkgconfig")
 	$(call IFw,tcc.1,"$(mandir)/man1")
 	$(call IFw,tcc-doc.info,"$(infodir)")
 	$(call IFw,tcc-doc.html,"$(docdir)")
@@ -387,7 +388,7 @@ endif
 # uninstall
 uninstall-unx:
 	@rm -fv $(foreach P,$(PROGS) $(PROGS_CROSS),"$(bindir)/$P")
-	@rm -fv "$(libdir)/libtcc.a" "$(libdir)/libtcc.so" "$(libdir)/libtcc.dylib" "$(includedir)/libtcc.h"
+	@rm -fv "$(libdir)/libtcc.a" "$(libdir)/libtcc.so" "$(libdir)/libtcc.dylib" "$(includedir)/libtcc.h" "$(libdir)/pkgconfig/libtcc.pc"
 	@rm -fv "$(mandir)/man1/tcc.1" "$(infodir)/tcc-doc.info"
 	@rm -fv "$(docdir)/tcc-doc.html"
 	@rm -frv "$(tccdir)"
@@ -463,7 +464,7 @@ clean:
 	@$(MAKE) -s -C tests $@
 
 distclean: clean
-	@rm -f config.h config.mak config.texi
+	@rm -f config.h config.mak config.texi libtcc.pc
 	@rm -f $(TCCDOCS)
 
 .PHONY: all clean test tar tags ETAGS doc distclean install uninstall FORCE
