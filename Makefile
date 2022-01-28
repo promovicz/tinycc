@@ -18,7 +18,7 @@ endif
 
 LIBTCC = libtcc.a
 LIBTCC1 = libtcc1.a
-LINK_LIBTCC =
+LINK_RPATH =
 LIBS =
 CFLAGS += -I$(TOP)
 CFLAGS += $(CPPFLAGS)
@@ -43,12 +43,12 @@ else
   export LD_LIBRARY_PATH := $(CURDIR)/$(TOP)
   ifneq ($(CONFIG_rpath),no)
     ifndef CONFIG_OSX
-      LINK_LIBTCC += -Wl,-rpath,"$(libdir)"
+      LINK_RPATH += -Wl,-rpath,"$(libdir)"
     else
       # macOS doesn't support env-vars libdir out of the box - which we need for
       # `make test' when libtcc.dylib is used (configure --disable-static), so
       # we bake a relative path into the binary. $libdir is used after install.
-      LINK_LIBTCC += -Wl,-rpath,"@executable_path/$(TOP)" -Wl,-rpath,"$(libdir)"
+      LINK_RPATH += -Wl,-rpath,"@executable_path/$(TOP)" -Wl,-rpath,"$(libdir)"
       DYLIBVER += -current_version $(VERSION)
       DYLIBVER += -compatibility_version $(VERSION)
     endif
@@ -272,7 +272,7 @@ $(X)tcc.o : DEFINES += $(DEF_GITHASH) $(DEF_GITDATE)
 
 # Host Tiny C Compiler
 tcc$(EXESUF): tcc.o $(LIBTCC)
-	$S$(CC) -o $@ $^ $(LIBS) $(LDFLAGS) $(LINK_LIBTCC)
+	$S$(CC) -o $@ $^ $(LIBS) $(LDFLAGS) $(LINK_RPATH)
 
 # Cross Tiny C Compilers
 # (the TCCDEFS_H dependency is only necessary for parallel makes,
@@ -297,7 +297,7 @@ libtcc.a: $(LIBTCC_OBJ)
 
 # dynamic libtcc library
 libtcc.so: $(LIBTCC_OBJ)
-	$S$(CC) -shared -Wl,-soname,$@ -o $@ $^ $(LIBS) $(LDFLAGS)
+	$S$(CC) -shared -Wl,-soname,$@ -o $@ $^ $(LIBS) $(LDFLAGS) $(LINK_RPATH)
 
 libtcc.so: CFLAGS+=-fPIC
 libtcc.so: LDFLAGS+=-fPIC
