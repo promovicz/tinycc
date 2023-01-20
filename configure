@@ -50,6 +50,7 @@ ar_set=
 darwin=
 cpuver=
 dwarf=
+static="yes"
 
 # use CC from environment when set
 test -n "$CC" && cc="$CC"
@@ -75,6 +76,7 @@ case $targetos in
   Windows_NT|MINGW*|MSYS*|CYGWIN*)
     mingw32=yes
     targetos=WIN32
+    static=
     ;;
   DragonFly|OpenBSD|FreeBSD|NetBSD)
     confvars="$confvars BSD ldl=no"
@@ -161,9 +163,9 @@ for opt do
   ;;
   --enable-cross) confvars="$confvars cross"
   ;;
-  --disable-static) confvars="$confvars static=no"
+  --disable-static) confvars="$confvars static=no"; static=
   ;;
-  --enable-static) confvars="$confvars static"
+  --enable-static) confvars="$confvars static"; static="yes"
   ;;
   --disable-rpath) confvars="$confvars rpath=no"
   ;;
