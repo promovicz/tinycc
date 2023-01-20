@@ -52,6 +52,7 @@ cpuver=
 dwarf=
 targetos=
 build_cross=
+static="yes"
 
 # use CC/AR from environment when set
 test -n "$CC" && cc="$CC"
@@ -119,9 +120,9 @@ for opt do
   ;;
   --enable-cross) confvars="$confvars cross"
   ;;
-  --disable-static) confvars="$confvars static=no"
+  --disable-static) confvars="$confvars static=no"; static=
   ;;
-  --enable-static) confvars="$confvars static"
+  --enable-static) confvars="$confvars static"; static="yes"
   ;;
   --disable-rpath) confvars="$confvars rpath=no"
   ;;
